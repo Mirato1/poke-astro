@@ -1,0 +1,16 @@
+<button
+  id='pokemones-btn'
+  class='bg-blue-500 text-white p-2 rounded-md active:bg-blue-600 disabled:bg-blue-300 disabled:text-gray-500 disabled:cursor-not-allowed hover:bg-blue-600 transition-all duration-300 cursor-pointer active:scale-95'
+>
+  Pokemones
+</button>
+
+<script>
+  import { throwConfetti } from '@utils/confetti'
+
+  const button = document.getElementById('pokemones-btn')
+
+  button?.addEventListener('click', () => {
+    throwConfetti()
+  })
+</script>

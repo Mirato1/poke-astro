@@ -1,0 +1,12 @@
+---
+import PokemonCard from '@components/PokemonCard.astro'
+import Layout from '@layouts/Layout.astro'
+const response = await fetch(`${import.meta.env.PUBLIC_POKEAPI}/pokemon`)
+const data = await response.json()
+---
+
+<Layout title='Pokemons • Poke Astro'>
+  <div class='grid grid-pokemons gap-4 p-4'>
+    {data.results.map((pokemon: any) => <PokemonCard url={pokemon.url} />)}
+  </div>
+</Layout>

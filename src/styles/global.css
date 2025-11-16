@@ -10,3 +10,143 @@ body {
     @apply flex-1;
   }
 }
+
+.pokemon-card {
+  @apply flex items-center px-5 py-4 rounded-2xl justify-between text-zinc-50 h-52 overflow-hidden;
+}
+
+.bg-pokeball {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: -10px;
+  bottom: -10px;
+  color: hsla(0, 0%, 100%, 0.2);
+}
+
+.bg-pokeball:before {
+  content: '';
+  position: relative;
+  width: 8rem;
+  padding-bottom: 4rem;
+  border: 4em solid;
+  -webkit-clip-path: polygon(
+    0 0,
+    0 40%,
+    50% 40%,
+    50% 60%,
+    0 60%,
+    0 100%,
+    100% 100%,
+    100% 60%,
+    50% 60%,
+    50% 40%,
+    100% 40%,
+    100% 0
+  );
+  clip-path: polygon(
+    0 0,
+    0 40%,
+    50% 40%,
+    50% 60%,
+    0 60%,
+    0 100%,
+    100% 100%,
+    100% 60%,
+    50% 60%,
+    50% 40%,
+    100% 40%,
+    100% 0
+  );
+}
+
+.bg-pokeball:after,
+.bg-pokeball:before {
+  display: block;
+  border-radius: 100%;
+}
+
+.bg-pokeball:after {
+  content: '';
+  position: absolute;
+  width: 5em;
+  padding-bottom: 5em;
+  background-color: currentColor;
+}
+
+.fire {
+  @apply bg-red-600;
+}
+
+.grass {
+  @apply bg-green-600;
+}
+
+.water {
+  @apply bg-blue-600;
+}
+
+.electric {
+  @apply bg-yellow-500;
+}
+
+.ice {
+  @apply bg-cyan-600;
+}
+
+.fighting {
+  @apply bg-orange-600;
+}
+
+.poison {
+  @apply bg-purple-600;
+}
+
+.ground {
+  @apply bg-yellow-600;
+}
+
+.flying {
+  @apply bg-indigo-600;
+}
+
+.psychic {
+  @apply bg-fuchsia-600;
+}
+
+.bug {
+  @apply bg-lime-600;
+}
+
+.rock {
+  @apply bg-yellow-700;
+}
+
+.ghost {
+  @apply bg-violet-800;
+}
+
+.dragon {
+  @apply bg-red-600;
+}
+
+.dark {
+  @apply bg-gray-800;
+}
+
+.steel {
+  @apply bg-gray-400;
+}
+
+.fairy {
+  @apply bg-pink-600;
+}
+
+.normal {
+  @apply bg-neutral-400;
+}
+
+.grid-pokemons {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
