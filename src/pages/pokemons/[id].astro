@@ -1,5 +1,5 @@
 ---
-export const prerender = false
+import Layout from '@layouts/Layout.astro'
 const { id } = Astro.params
 const response = await fetch(`${import.meta.env.PUBLIC_POKEAPI}/pokemon/${id}`)
 const pokemon = await response.json()
@@ -8,24 +8,28 @@ function capitalizeString(str: string) {
 }
 ---
 
-<section class={`${pokemon.types[0].type.name} relative p-4 rounded-xl shadow-xl  overflow-hidden`}>
-  <h1 class='text-4xl font-bold mb-4'>{capitalizeString(pokemon.name)}</h1>
-  <div class={``} transition:name=`pokemon ${pokemon.id} box`>
-    <div class='flex-1'>
-      <img
-        class='w-96 h-96 object-contain z-[1]'
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
-        alt={pokemon.name}
-        transition:name=`pokemon ${pokemon.id} image`
-      />
-    </div>
-    <div class='flex-1'>
-      <h2 class='text-2xl font-bold mb-4'>Abilities</h2>
-      <ul class='list-disc list-inside'>
-        {pokemon.abilities.map((ability: any) => <li>{capitalizeString(ability.ability.name)}</li>)}
-      </ul>
-    </div>
-    <div class='bg-pokeball text-[8px]'></div>
-    <p class='absolute top-[1.5%] right-[2.5%] text-4xl text-zinc-50/60'># {pokemon.id}</p>
+<Layout title={`Pokemon ${capitalizeString(pokemon.name)}`}>
+  <div class='p-4 mx-auto max-w-7xl'>
+    <section class={`${pokemon.types[0].type.name} relative p-4 rounded-xl shadow-xl overflow-hidden`}>
+      <h1 class='text-4xl font-bold mb-4'>{capitalizeString(pokemon.name)}</h1>
+      <div class={``} transition:name=`pokemon ${pokemon.id} box`>
+        <div class='flex-1'>
+          <img
+            class='w-96 h-96 object-contain z-1'
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+            alt={pokemon.name}
+            transition:name=`pokemon ${pokemon.id} image`
+          />
+        </div>
+        <div class='flex-1'>
+          <h2 class='text-2xl font-bold mb-4'>Abilities</h2>
+          <ul class='list-disc list-inside'>
+            {pokemon.abilities.map((ability: any) => <li>{capitalizeString(ability.ability.name)}</li>)}
+          </ul>
+        </div>
+        <div class='bg-pokeball text-[8px]'></div>
+        <p class='absolute top-[1.5%] right-[2.5%] text-4xl text-zinc-50/60'># {pokemon.id}</p>
+      </div>
+    </section>
   </div>
-</section>
+</Layout>

@@ -5,7 +5,7 @@ const pokemon = await response.json()
 ---
 
 <a
-  href={`mains/${pokemon.id}`}
+  href={`pokemons/${pokemon.id}`}
   class={`pokemon-card ${pokemon.types[0].type.name} relative`}
   transition:name=`pokemon ${pokemon.id} box`
 >
