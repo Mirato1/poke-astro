@@ -27,14 +27,12 @@ const pokemon = await response.json()
       }
     </div>
   </div>
-  <div class='flex flex-col items-center'>
-    <img
-      class='w-36 h-36 object-contain z-1'
-      src={`${API_URLS.SPRITES}${pokemon.id}.svg`}
-      alt={pokemon.name}
-      transition:name=`pokemon ${pokemon.id} image`
-    />
-  </div>
+  <img
+    class='w-36 h-36 object-contain z-1 flex-1'
+    src={`${API_URLS.SPRITES}/${pokemon.id}.svg`}
+    alt={pokemon.name}
+    transition:name=`pokemon ${pokemon.id} image`
+  />
   <div class='bg-pokeball text-[8px]'></div>
   <p class='absolute top-[5%] right-[5%] text-3xl text-zinc-50/60'># {pokemon.id}</p>
 </a>
