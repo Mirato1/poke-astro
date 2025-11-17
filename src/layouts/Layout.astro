@@ -4,7 +4,7 @@ import Footer from '@components/Footer.astro'
 import Header from '@components/Header.astro'
 import background from '@assets/background.svg'
 import { ClientRouter } from 'astro:transitions'
-
+import { Image } from 'astro:assets'
 const { title = 'Poke Astro' } = Astro.props
 ---
 
@@ -21,7 +21,7 @@ const { title = 'Poke Astro' } = Astro.props
   </head>
   <body class='flex flex-col min-h-screen'>
     <ClientRouter />
-    <img id='background' src={background.src} alt='' fetchpriority='high' />
+    <Image id='background' src={background} alt='' fetchpriority='high' />
     <Header />
     <main>
       <slot />

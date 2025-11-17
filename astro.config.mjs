@@ -10,4 +10,5 @@ export default defineConfig({
   },
   integrations: [icon()],
   output: 'server',
+  prefetch: false,
 })

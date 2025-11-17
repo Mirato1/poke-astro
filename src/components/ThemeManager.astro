@@ -6,7 +6,7 @@ type Props = {
 const { defaultTheme = 'auto' } = Astro.props
 ---
 
-<script is:inline data-default-theme={defaultTheme}>
+<script is:inline data-default-theme={defaultTheme} data-astro-rerun>
   window.theme ??= (() => {
     const defaultTheme = document.currentScript.getAttribute('data-default-theme')
     const storageKey = 'theme'

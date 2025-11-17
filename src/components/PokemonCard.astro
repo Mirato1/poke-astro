@@ -1,4 +1,6 @@
 ---
+import { API_URLS } from '@utils/apiUrls'
+
 const { url } = Astro.props
 const response = await fetch(url)
 const pokemon = await response.json()
@@ -28,7 +30,7 @@ const pokemon = await response.json()
   <div class='flex flex-col items-center'>
     <img
       class='w-36 h-36 object-contain z-1'
-      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+      src={`${API_URLS.SPRITES}${pokemon.id}.svg`}
       alt={pokemon.name}
       transition:name=`pokemon ${pokemon.id} image`
     />
