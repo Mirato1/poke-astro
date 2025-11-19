@@ -18,7 +18,7 @@ const pokemon = await response.json()
         pokemon.types.map((type: any, index: number) => (
           <span
             class={`rounded-full px-2 py-1 text-sm font-semibold w-20 text-center ${
-              index > 0 ? `${type.type.name} bg-opacity-80` : 'bg-zinc-100/40 '
+              index > 0 ? `${type.type.name}` : 'bg-zinc-100/40 '
             }  `}
           >
             {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
@@ -34,5 +34,5 @@ const pokemon = await response.json()
     transition:name=`pokemon ${pokemon.id} image`
   />
   <div class='bg-pokeball text-[8px]'></div>
-  <p class='absolute top-[5%] right-[5%] text-3xl text-zinc-50/60'># {pokemon.id}</p>
+  <p class='pokemon-number absolute top-[5%] right-[5%]'>#{pokemon.id}</p>
 </a>

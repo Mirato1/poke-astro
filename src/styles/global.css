@@ -76,77 +76,81 @@ body {
 }
 
 .fire {
-  @apply bg-red-600;
+  @apply bg-red-600/50;
 }
 
 .grass {
-  @apply bg-green-600;
+  @apply bg-green-600/50;
 }
 
 .water {
-  @apply bg-blue-600;
+  @apply bg-blue-600/50;
 }
 
 .electric {
-  @apply bg-yellow-500;
+  @apply bg-yellow-500/50;
 }
 
 .ice {
-  @apply bg-cyan-600;
+  @apply bg-cyan-600/50;
 }
 
 .fighting {
-  @apply bg-orange-600;
+  @apply bg-orange-600/50;
 }
 
 .poison {
-  @apply bg-purple-600;
+  @apply bg-purple-600/50;
 }
 
 .ground {
-  @apply bg-yellow-600;
+  @apply bg-yellow-600/50;
 }
 
 .flying {
-  @apply bg-indigo-600;
+  @apply bg-indigo-600/50;
 }
 
 .psychic {
-  @apply bg-fuchsia-600;
+  @apply bg-fuchsia-600/50;
 }
 
 .bug {
-  @apply bg-lime-600;
+  @apply bg-lime-600/50;
 }
 
 .rock {
-  @apply bg-yellow-700;
+  @apply bg-yellow-700/50;
 }
 
 .ghost {
-  @apply bg-violet-800;
+  @apply bg-violet-800/50;
 }
 
 .dragon {
-  @apply bg-red-600;
+  @apply bg-red-600/50;
 }
 
 .dark {
-  @apply bg-gray-800;
+  @apply bg-gray-800/50;
 }
 
 .steel {
-  @apply bg-gray-400;
+  @apply bg-gray-400/50;
 }
 
 .fairy {
-  @apply bg-pink-600;
+  @apply bg-pink-600/50;
 }
 
 .normal {
-  @apply bg-neutral-400;
+  @apply bg-neutral-400/50;
 }
 
 .grid-pokemons {
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.pokemon-number {
+  @apply text-3xl text-zinc-50/60;
 }
