@@ -1,37 +1,218 @@
 ---
 import Layout from '@layouts/Layout.astro'
+import { ChevronRight } from '@lucide/astro/icons'
 import { API_URLS } from '@utils/apiUrls'
+
 const { id } = Astro.params
 const response = await fetch(`${import.meta.env.PUBLIC_POKEAPI}/pokemon/${id}`)
 const pokemon = await response.json()
+
+// Obtener información de la especie para la cadena evolutiva
+const speciesResponse = await fetch(pokemon.species.url)
+const species = await speciesResponse.json()
+
+// Obtener cadena evolutiva
+const evolutionChainResponse = await fetch(species.evolution_chain.url)
+const evolutionChain = await evolutionChainResponse.json()
+
 function capitalizeString(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+// Función recursiva para obtener todos los Pokémon de la cadena evolutiva
+async function getEvolutionChain(chain: any): Promise<any[]> {
+  const evolutions: any[] = []
+
+  async function traverseChain(currentChain: any) {
+    const pokemonId = currentChain.species.url.split('/').filter(Boolean).pop()
+    const pokemonResponse = await fetch(`${import.meta.env.PUBLIC_POKEAPI}/pokemon/${pokemonId}`)
+    const pokemonData = await pokemonResponse.json()
+
+    evolutions.push({
+      id: pokemonId,
+      name: pokemonData.name,
+      image: `${API_URLS.SPRITES}/${pokemonId}.svg`,
+      types: pokemonData.types,
+      evolutionDetails: currentChain.evolution_details || [],
+    })
+
+    if (currentChain.evolves_to && currentChain.evolves_to.length > 0) {
+      for (const nextEvolution of currentChain.evolves_to) {
+        await traverseChain(nextEvolution)
+      }
+    }
+  }
+
+  await traverseChain(chain)
+  return evolutions
+}
+
+const evolutionChainList = await getEvolutionChain(evolutionChain.chain)
+
+// Función para obtener el nombre de la estadística
+function getStatName(statName: string): string {
+  const statNames: Record<string, string> = {
+    hp: 'HP',
+    attack: 'Ataque',
+    defense: 'Defensa',
+    'special-attack': 'Ataque Especial',
+    'special-defense': 'Defensa Especial',
+    speed: 'Velocidad',
+  }
+  return statNames[statName] || capitalizeString(statName)
 }
 ---
 
 <Layout title={`Pokemon ${capitalizeString(pokemon.name)}`}>
   <div class='p-4 mx-auto max-w-7xl'>
     <section
-      class={`pokemon-card ${pokemon.types[0].type.name} relative shadow-xl`}
+      class={`pokemon-detail-card ${pokemon.types[0].type.name} relative shadow-2xl rounded-2xl overflow-hidden`}
       transition:name=`pokemon ${pokemon.id} box`
     >
-      <h1 class='text-4xl font-bold mb-4'>{capitalizeString(pokemon.name)}</h1>
-      <div class='flex-1'>
-        <img
-          class='w-96 h-96 object-contain z-1'
-          src={`${API_URLS.SPRITES}/${pokemon.id}.svg`}
-          alt={pokemon.name}
-          transition:name=`pokemon ${pokemon.id} image`
-        />
+      <!-- Header con nombre y número -->
+      <div class='relative z-10 p-6 md:p-8'>
+        <div class='flex flex-col md:flex-row justify-between items-start mb-4 gap-4'>
+          <div>
+            <h1 class='text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-white drop-shadow-lg'>
+              {capitalizeString(pokemon.name)}
+            </h1>
+            <p class='pokemon-number text-3xl md:text-4xl lg:text-5xl text-white/60 font-bold'>
+              #{String(pokemon.id).padStart(3, '0')}
+            </p>
+          </div>
+        </div>
+
+        <div class='grid md:grid-cols-2 gap-6 mt-8'>
+          <!-- Imagen del Pokémon -->
+          <div class='flex items-center justify-center relative'>
+            <img
+              class='object-contain absolute top-0 left-0 w-full h-full z-10'
+              src={`${API_URLS.SPRITES}/${pokemon.id}.svg`}
+              alt={pokemon.name}
+              transition:name=`pokemon ${pokemon.id} image`
+            />
+            <img
+              class='animate-pulse absolute top-0 left-0 w-full h-full blur-md select-none pointer-events-none'
+              src={`${API_URLS.SPRITES}/${pokemon.id}.svg`}
+              alt={pokemon.name}
+            />
+          </div>
+
+          <!-- Información unificada: Tipos, Habilidades, Altura, Peso y Estadísticas -->
+          <div class='bg-white/10 backdrop-blur-sm rounded-xl p-6 space-y-6'>
+            <!-- Tipos y Habilidades -->
+            <div class='space-y-4'>
+              <div>
+                <h3 class='text-lg font-bold text-white mb-3'>Tipos</h3>
+                <div class='flex flex-wrap gap-2'>
+                  {
+                    pokemon.types.map((type: any) => (
+                      <span
+                        class={`type-badge ${type.type.name} rounded-full px-4 py-2 text-sm font-bold text-center min-w-[100px] text-white shadow-md backdrop-blur-sm`}
+                      >
+                        {capitalizeString(type.type.name)}
+                      </span>
+                    ))
+                  }
+                </div>
+              </div>
+
+              <div>
+                <h3 class='text-lg font-bold text-white mb-3'>Habilidades</h3>
+                <div class='flex flex-wrap gap-2'>
+                  {
+                    pokemon.abilities.map((ability: any) => (
+                      <div
+                        class={`ability-badge ${
+                          ability.is_hidden ? 'bg-amber-500/30 border-amber-400' : 'bg-white/20 border-white/30'
+                        } rounded-lg px-3 py-1.5 border backdrop-blur-sm text-sm`}
+                      >
+                        <span class='text-white font-semibold'>{capitalizeString(ability.ability.name)}</span>
+                        {ability.is_hidden && <span class='ml-1 text-xs text-amber-200'>(Oculta)</span>}
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Altura y Peso en una sola fila compacta -->
+            <div class='grid grid-cols-2 gap-3 pt-2 border-t border-white/20'>
+              <div>
+                <p class='text-white/70 text-xs mb-1'>Altura</p>
+                <p class='text-xl font-bold text-white'>{pokemon.height / 10}m</p>
+              </div>
+              <div>
+                <p class='text-white/70 text-xs mb-1'>Peso</p>
+                <p class='text-xl font-bold text-white'>{pokemon.weight / 10}kg</p>
+              </div>
+            </div>
+
+            <!-- Estadísticas base compactas -->
+            <div class='space-y-2 pt-2 border-t border-white/20'>
+              <h3 class='text-lg font-bold text-white mb-3'>Estadísticas Base</h3>
+              <div class='space-y-2'>
+                {
+                  pokemon.stats.map((stat: any) => (
+                    <div>
+                      <div class='flex justify-between mb-1'>
+                        <span class='text-white/90 text-xs font-semibold'>{getStatName(stat.stat.name)}</span>
+                        <span class='text-white font-bold text-sm'>{stat.base_stat}</span>
+                      </div>
+                      <div class='w-full bg-white/20 rounded-full h-1.5'>
+                        <div
+                          class='bg-white rounded-full h-1.5 transition-all'
+                          style={`width: ${(stat.base_stat / 255) * 100}%`}
+                        />
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evoluciones -->
+        {
+          evolutionChainList.length > 1 && (
+            <div class='mt-8 bg-white/10 backdrop-blur-sm rounded-xl p-6'>
+              <h2 class='text-2xl font-bold text-white mb-6'>Evoluciones</h2>
+              <div class='flex flex-wrap items-center justify-center gap-4 md:gap-6'>
+                {evolutionChainList.map((evolution, index) => (
+                  <div class='flex items-center gap-3 md:gap-4'>
+                    <a href={`/pokemons/${evolution.id}`} class={`evolution-link transition-all duration-300`}>
+                      <div
+                        class={`evolution-card ${
+                          evolution.id === pokemon.id.toString() ? evolution.types[0].type.name : ''
+                        } rounded-xl p-4 bg-white/10 backdrop-blur-sm border-2 ${
+                          evolution.id === pokemon.id.toString() ? 'border-white' : 'border-white/20'
+                        } min-w-[120px] text-center`}
+                      >
+                        <img src={evolution.image} alt={evolution.name} class='w-24 h-24 object-contain mx-auto mb-2' />
+                        <p class='text-white font-bold text-sm mb-1'>{capitalizeString(evolution.name)}</p>
+                        <p class='text-white/70 text-xs'>#{String(evolution.id).padStart(3, '0')}</p>
+                        <div class='flex gap-1 justify-center mt-2'>
+                          {evolution.types.map((type: any) => (
+                            <span
+                              class={`type-badge-mini ${type.type.name} rounded-full px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm`}
+                            >
+                              {type.type.name.toUpperCase()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </a>
+                    {index < evolutionChainList.length - 1 && (
+                      <ChevronRight name='heroicons:chevron-right' class='text-white/60 w-6 h-6 hidden md:block' />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        }
       </div>
-      <div class='flex-1'>
-        <h2 class='text-2xl font-bold mb-4'>Abilities</h2>
-        <ul class='list-disc list-inside'>
-          {pokemon.abilities.map((ability: any) => <li>{capitalizeString(ability.ability.name)}</li>)}
-        </ul>
-      </div>
-      <div class='bg-pokeball text-[8px]'></div>
-      <p class='pokemon-number absolute top-4 right-4 text-7xl!'>#{pokemon.id}</p>
     </section>
   </div>
 </Layout>

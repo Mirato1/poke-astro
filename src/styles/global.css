@@ -154,3 +154,35 @@ body {
 .pokemon-number {
   @apply text-3xl text-zinc-50/60;
 }
+
+.pokemon-detail-card {
+  @apply min-h-screen text-zinc-50;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.type-badge {
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.type-badge-mini {
+  backdrop-filter: blur(10px);
+}
+
+.evolution-link {
+  @apply block;
+}
+
+.evolution-link:hover {
+  transform: translateY(-4px);
+}
+
+.pokemon-number {
+  @apply text-4xl md:text-5xl text-white/60 font-bold;
+}
+
+@media (max-width: 768px) {
+  .pokemon-detail-card {
+    @apply min-h-auto;
+  }
+}
